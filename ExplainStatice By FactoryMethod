@@ -1,0 +1,191 @@
+静态方法（static method）和非静态方法（instance method）之间的主要区别在于它们如何与类的实例（对象）关联。
+
+静态方法：
+
+属于类本身，而不属于类的实例（对象）。
+在类级别上定义，因此可以在不创建类的实例的情况下直接调用。
+无法访问类的非静态成员（如实例变量和实例方法），因为它们依赖于具体的实例。
+通常用于实现与类的实例无关的功能，例如实用程序方法、工厂方法等。
+示例：
+
+java
+Copy code
+public static void myStaticMethod() {
+    // 静态方法的实现
+}
+调用静态方法：
+
+java
+Copy code
+MyClass.myStaticMethod();
+非静态方法（实例方法）：
+
+属于类的实例（对象）。
+需要先创建类的实例才能调用。
+可以访问类的实例变量和实例方法，因为它们与具体的实例关联。
+通常用于实现与类的实例相关的功能，例如操作实例变量、执行实例相关的操作等。
+示例：
+
+java
+Copy code
+public void myInstanceMethod() {
+    // 实例方法的实现
+}
+调用实例方法：
+
+java
+Copy code
+MyClass myObject = new MyClass();
+myObject.myInstanceMethod();
+将downloadAttachmentToLocal方法从静态更改为非静态意味着：
+
+不能再直接通过类名调用该方法，必须先创建一个类的实例。
+该方法现在可以访问类的实例变量和实例方法（如果有的话）。
+
+
+
+
+YELLA MOON
+為什麼藥用private statice 方法
+private static 方法在 Java 中的作用和原因如下：
+
+封装（Encapsulation）：private 关键字确保方法只能在定义它的类内部使用。这提供了封装，使得类的实现细节对外部类不可见。这有助于维护代码的可读性和可维护性，
+因为外部类不需要了解类的内部实现。
+
+静态（Static）：static 关键字表示该方法属于类本身，而不是类的实例。因此，您不需要创建类的实例即可调用静态方法。通常，静态方法用于实现与类的实例无关的功能，
+例如实用程序方法或工厂方法。
+
+private static 方法通常用于以下情况：
+
+当一个类的内部逻辑需要被重复使用时，但这些逻辑对类外部是不可见的。
+当您希望实现一个与类的实例无关的功能，但仅在类内部使用时。
+当一个方法不需要访问实例变量或方法时，将其声明为静态可以提高性能。
+总之，private static 方法是一种限制方法访问范围并将其与类本身关联的方法。这有助于封装类的实现细节，同时提供了在类内部执行与实例无关的操作的功能。
+
+
+
+
+
+YELLA MOON
+
+2 / 2
+
+舉例給我statice 的工廠方法，用 軍隊訓練營舉例，可以訓練 長劍兵 與長弓手，裝備在軍工廠製造，劍手用劍，弓手用弓
+在以下示例中，我们使用 SoldierFactory 类来创建不同类型的士兵：Swordsman 和 Archer。这两种类型的士兵都继承自一个基类 Soldier。WeaponFactory 类负责制造武器，
+如 Sword 和 Bow。这两种武器都继承自 Weapon 基类。
+
+首先，我们创建 Soldier 和 Weapon 基类：
+
+java
+Copy code
+public abstract class Soldier {
+    private String name;
+    private Weapon weapon;
+
+    public Soldier(String name, Weapon weapon) {
+        this.name = name;
+        this.weapon = weapon;
+    }
+
+    public abstract void train();
+}
+
+public abstract class Weapon {
+    private String type;
+
+    public Weapon(String type) {
+        this.type = type;
+    }
+
+    public abstract void manufacture();
+}
+接下来，我们创建具体的士兵和武器类：
+
+java
+Copy code
+public class Swordsman extends Soldier {
+    public Swordsman(String name, Weapon weapon) {
+        super(name, weapon);
+    }
+
+    @Override
+    public void train() {
+        System.out.println("Swordsman " + name + " is training with " + weapon.getType() + ".");
+    }
+}
+
+public class Archer extends Soldier {
+    public Archer(String name, Weapon weapon) {
+        super(name, weapon);
+    }
+
+    @Override
+    public void train() {
+        System.out.println("Archer " + name + " is training with " + weapon.getType() + ".");
+    }
+}
+
+public class Sword extends Weapon {
+    public Sword() {
+        super("Sword");
+    }
+
+    @Override
+    public void manufacture() {
+        System.out.println("Manufacturing a sword.");
+    }
+}
+
+public class Bow extends Weapon {
+    public Bow() {
+        super("Bow");
+    }
+
+    @Override
+    public void manufacture() {
+        System.out.println("Manufacturing a bow.");
+    }
+}
+现在，我们创建工厂方法的 SoldierFactory 和 WeaponFactory 类：
+
+java
+Copy code
+public class SoldierFactory {
+    public static Soldier createSwordsman(String name) {
+        Weapon weapon = WeaponFactory.createSword();
+        return new Swordsman(name, weapon);
+    }
+
+    public static Soldier createArcher(String name) {
+        Weapon weapon = WeaponFactory.createBow();
+        return new Archer(name, weapon);
+    }
+}
+
+public class WeaponFactory {
+    public static Sword createSword() {
+        Sword sword = new Sword();
+        sword.manufacture();
+        return sword;
+    }
+
+    public static Bow createBow() {
+        Bow bow = new Bow();
+        bow.manufacture();
+        return bow;
+    }
+}
+最后，我们可以使用工厂方法创建并训练士兵：
+
+java
+Copy code
+public class Main {
+    public static void main(String[] args) {
+        Soldier swordsman = SoldierFactory.createSwordsman("John");
+        Soldier archer = SoldierFactory.createArcher("Jane");
+
+        swordsman.train();
+        archer.train();
+    }
+}
+在这个示例中，我们使用了静态工厂方法 SoldierFactory.createSwordsman() 和 SoldierFactory.createArcher() 来创建不同类型的士兵。同样，我们使用了静态工厂方法 WeaponFactory.createSword() 和 WeaponFactory.createBow() 来创建武器。这些工厂方法可以在不需要实例化工厂类
